@@ -2,13 +2,20 @@
   <div class="index-page">
     <h1 class="title">News page</h1>
     <ul class="news">
-      <li class="news__preview">
+      <li v-for="news of newsArr" :key="news.id" class="news__preview">
+        <span class="news__preview-date">05.09.2022</span>
+        <img
+          class="news__preview-thumbnail"
+          :src="news.url"
+          alt=""
+        />
         <div class="news__preview-wrapper">
-          <h3 class="news__preview-title">Dolore, dolorem! <span class="news__preview-date">05.09.2022</span></h3>
-          <p class="news__preview-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi, in!</p>
-          <a class="news-link" href="#"></a>
+          <h3 class="news__preview-title">{{ news.title }}</h3>
+          <p class="news__preview-text">
+            {{ news.body }}
+          </p>
+          <a class="news-link" href="" @click.prevent="openNews(news)" />
         </div>
-        <img class="news__preview-thumbnail" src="https://via.placeholder.com/150/771796" alt="">
       </li>
     </ul>
   </div>
@@ -16,42 +23,66 @@
 
 <script>
 export default {
-  name: "IndexPage",
+  name: 'IndexPage',
   data() {
-    return {
-      // news: {}
-    }
+    return {}
   },
-  async fetch({store}) {
-    await store.dispatch('fetchNews');    
+  async fetch({ store }) {
+    await store.dispatch('fetchNews')
   },
   computed: {
-    news() {
-      return this.store.getters.getNews;
-    }
+    newsArr() {
+      return this.$store.getters.getNews
+    },
   },
   methods: {
-
-  },  
+    openNews(news) {
+      this.$router.push('/' + news.id)
+    }
+  },
 }
 </script>
 
 <style scoped>
+.title {
+  font-family: 'Chomsky';
+  text-align: center;
+}
+.news {
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 15px;
+  grid-template-rows: auto;
+  max-width: 1250px;
+  margin: 0 auto;
+}
+
 .news__preview {
   list-style: none;
   max-width: 700px;
   display: flex;
-  justify-content: space-between;
-  border: 1px solid darkgray;
+  flex-direction: column;
   position: relative;
+  max-width: 470px;
+  min-width: 370px;
+  box-sizing: border-box;
+  padding: 10px;
+  box-shadow: 0 0 3px 0 rgb(0 0 0 / 34%);
 }
 
 .news__preview-wrapper {
-  padding: 10px 0px 5px 10px;
+  padding-top: 10px;
+}
+
+.news__preview-thumbnail {
+  max-width: 472px;
+  max-height: 258px;
 }
 
 .news__preview-title {
-  font-size: 23px;
+  font-family: Helvetica, sans-serif;
+  font-size: 22px;
   margin: 0px 0px 10px;
   display: flex;
   align-items: center;
@@ -66,11 +97,12 @@ export default {
 }
 
 .news__preview-date {
-  font-size: 14px;
-  font-weight: 400;
+  color: #999;
+  font: 400 15px/1.4 ProximaNova, Helvetica, sans-serif;
 }
 
-.news-link {}
+.news-link {
+}
 
 .news-link::after {
   content: ' ';

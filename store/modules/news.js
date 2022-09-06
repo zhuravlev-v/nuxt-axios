@@ -3,15 +3,17 @@ export default {
     news: []
   }),
   mutations: {
-    setNews(state, news) {
-      state.news = news
-    }
+    setNews(state, data) {
+      state.news = data.news.map((news, i) => {
+        return { ...news, url: data.photos[i].url }
+      });
+    },
   },
   actions: {
     async fetchNews({commit}) {
       const news = await this.$axios.$get('https://jsonplaceholder.typicode.com/posts');
-      console.log(news)
-      commit('setNews', news)
+      const photos = await this.$axios.$get('https://jsonplaceholder.typicode.com/photos');
+      commit('setNews', { news, photos })
     }
   },
   getters: {
